@@ -1,12 +1,17 @@
 const fetch = require("node-fetch");
 
-const rdapikey = "RUHIU6EVPFHTZWWIXOWSQCJ6DEHQ62ZCK3FFF6XUHKZOJTX6OTWQ";
+const rdapikeys = [
+  // "SJ65TDDYCXOMVWFYHSN3ZQTLFO3YT3DYHSUQZGV7EIBE3G7DJHSA",
+  "MWSWTCYAE6IYXURMWCTBBVK5RACCMWFRKQI7XZPFJHHHFOWZ4HNA",
+];
+const rdapikey = rdapikeys[Math.floor(Math.random() * rdapikeys.length)];
 
 let headers = {
   Authorization: `Bearer ${rdapikey}`,
 };
 
 let checkTorrentFileinRD = async (hash = "") => {
+  if (!hash) return false;
   let url = `https://api.real-debrid.com/rest/1.0/torrents/instantAvailability/${hash}`;
   try {
     let res = await fetch(url, { method: "GET", headers });
@@ -19,6 +24,7 @@ let checkTorrentFileinRD = async (hash = "") => {
 };
 
 let addTorrentFileinRD = async (magnet = "") => {
+  if (!magnet) return false;
   let url = `https://api.real-debrid.com/rest/1.0/torrents/addMagnet`;
   let form = new URLSearchParams();
   form.append("magnet", magnet);
@@ -27,7 +33,7 @@ let addTorrentFileinRD = async (magnet = "") => {
     let resJson = await res.json();
     return resJson;
   } catch (error) {
-    return {};
+    return false;
   }
 };
 
@@ -50,7 +56,7 @@ let selectFilefromRD = async (id = "", files = "all") => {
   let url = `https://api.real-debrid.com/rest/1.0/torrents/selectFiles/${id}`;
   try {
     let form = new URLSearchParams();
-    form.append("files", files);
+    form.append("files", "all");
     let res = await fetch(url, { method: "POST", headers, body: form });
     if (res.status < 400) return true;
     return false;
