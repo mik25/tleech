@@ -18,7 +18,6 @@ const {
 let nbreAdded = 0;
 
 let containEandS = (name = "", s, e, abs, abs_season, abs_episode) =>
-  //SxxExx ./ /~/-
   //SxExx
   //SxExx
   //axb
